@@ -1,0 +1,33 @@
+<!--<script type="text/ng-template" id="/home.html">-->
+<div ng-controller="NavCtrl">
+  <h2 ng-hide="isLoggedIn()">
+        <span class="label label-primary">Je moet 
+            <a class="link" href="/#/login">Ingelogd</a> of 
+            <a class="link" href="/#/register">Geregistreerd zijn</a>
+             om meer te kunnen zien.
+        </span>
+        <h2>
+
+        <H1>Evenementen</H1>
+        <br>
+        <div ng-repeat="event in data | orderBy: 'date'">
+            <!--Hier zullen de evenementen mooi weergegeven worden -->
+            <div class="omkader">
+                <h1  ng-show="isLoggedIn()">
+                    <a class="hvr-bounce-to-right" href="#/event/{{event._id}}">{{event.name}}</a>
+                </h1>
+                <h1 ng-hide="isLoggedIn()"> {{event.name}} </h1>
+                <h5 style="float: right; padding: 5px;">
+                    date: {{event.date | date:"dd/MM/yy"}}
+                </h5>
+                <h3>{{event.placename}}</h3>
+                <p>{{event.location.region}}
+                    <br>{{event.location.postalcode}} {{event.location. town}}
+                    <br>{{event.location.streetname}}</p>
+                <hr  style="height: 1px; color: #000; background-color: #000;width: 70%;"/>
+                <h4><b>Omschrijving</b></h4>
+                <p> {{event.description}}</p>
+            </div>
+        </div>
+</div>
+  <!--  </script> -->

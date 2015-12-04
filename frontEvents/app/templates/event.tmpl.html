@@ -1,0 +1,37 @@
+<div class="container">
+  <div class="jumbotron">
+    <h1>{{event.name}}</h1>
+    <h3><b>{{event.placename}}</b></h3>
+    <p>{{event.location.region}}
+      <br>{{event.location.postalcode}} {{event.location. town}}
+      <br>{{event.location.streetname}}</p>
+    <div ng-init="rating "></div>
+    <starRating star-rating rating-value="rating" data-max="10" on-rating-selected="rateFunction(rating)"></starRating>
+  </div>
+  <h2>Beschrijving</h2>
+  <p> {{event.description}}</p>
+  <h2 ng-hide="event.artists == null || event.artists.length == 0">Met artiesten:</h2>
+  <div ng-repeat="artist in event.artists">
+    <p>{{artist.artistname}}</p>
+  </div>
+  <hr style="height: 2px; background: rgb(51, 51, 51) linear-gradient(to right, rgb(204, 204, 204), rgb(51, 51, 51), rgb(204, 204, 204)) repeat scroll 0% 0%;">
+  <div class="col-md-6 col-md-offset-3">
+    <h3>Ontbreken er nog artiesten?</h3>
+    <form name="artistForm" ng-submit="addArtist(artistForm.$valid)" novalidate="">
+      <div class="form-group" ng-class="{ 'has-error' : artistForm.name.$invalid && !artistForm.name.$pristine }">
+        <label class="control-label" for="artistname">ArtiestNaam:</label>
+        <div>
+          <input type="text" class="form-control" name="artistname" id="artistname" placeholder="Artiest naam" ng-model="artistname" required></input>
+          <span class="help-block" ng-show="artistForm.name.$error.required">Verplicht</span>
+        </div>
+      </div>
+      <div class="form-group">
+        <div class="">
+          <p>
+            <button type="submit" ng-disabled="artistForm.$invalid" class="btn btn-default">Voeg toe</button>
+            Vul eerst de verplichte velden in!</p>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>

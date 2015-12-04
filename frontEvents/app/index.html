@@ -6,7 +6,8 @@
     <title>frontEvents</title>
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="shortcut icon" href="/calendar.ico">
+    <link rel="shortcut icon" href="images/calendar.ico">
+
     <!-- build:css(.) styles/vendor.css -->
     <!-- bower:css -->
     <link rel="stylesheet" href="/bower_components/bootstrap/dist/css/bootstrap.css" />
@@ -14,213 +15,24 @@
     <!-- endbuild -->
     <!-- build:css(.tmp) styles/main.css -->
     <link rel="stylesheet" href="styles/main.css">
+    <link rel="stylesheet" href="styles/animations.css">
     <!-- endbuild -->
     <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.4.7/angular.js"></script>
     <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.4.7/angular-animate.js"></script>
     <script src="//angular-ui.github.io/bootstrap/ui-bootstrap-tpls-0.14.3.js"></script>
     <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.4.7/angular-messages.js"></script>
     <script src="http://cdnjs.cloudflare.com/ajax/libs/angular-ui-router/0.2.10/angular-ui-router.js"></script>
+
 </head>
 
-<body ng-app="events" ng-controller="MainCtrl">
-    <nav class="navbar navbar-default pull-left" ng-controller="NavCtrl">
-        <ul class="nav navbar-nav">
-            <li><a href="/#/home">Home</a></li>
-            <li ng-show="isLoggedIn()"><a href="/#/addevent">Add</a></li>
-        </ul>
-    </nav>
-    <nav class="navbar navbar-default pull-right" ng-controller="NavCtrl">
-        <ul class="nav navbar-nav">
-            <li ng-show="isLoggedIn()"><a>{{ currentUser() }}</a></li>
-            <li ng-show="isLoggedIn()"><a href="" ng-click="logOut()">Log Out</a></li>
-            <li ng-hide="isLoggedIn()"><a href="/#/login">Log In</a></li>
-            <li ng-hide="isLoggedIn()"><a href="/#/register">Register</a></li>
-        </ul>
-    </nav>
-    <div class="container">
-        <ui-view></ui-view>
-    </div>
-    <!--#############   Scripts   #############-->
-    <script type="text/ng-template" id="/home.html">
-        <div ng-controller="NavCtrl">
-            <h2 ng-hide="isLoggedIn()">
-        <span class="label label-primary">Je moet 
-            <a class="link" href="/#/login">Ingelogd</a> of 
-            <a class="link" href="/#/register">Geregistreerd zijn</a>
-             om meer te kunnen zien.
-        </span>
-        <h2>
-
-        <H1>Evenementen</H1>
-        <br>
-        <div ng-repeat="event in data | orderBy: 'date'">
-            <!--Hier zullen de evenementen mooi weergegeven worden -->
-            <div class="omkader">
-                <h1 ng-show="isLoggedIn()"><a  href="#/event/{{event._id}}">{{event.name}}</a></h1>
- <h1 ng-hide="isLoggedIn()">{{event.name}}</h1>
-                <h5 style="float: right; padding: 5px;"
->date: {{event.date | date:"dd/MM/yy"}}</h5>
-                <h3>{{event.placename}}</h3>
-                <p>{{event.location.region}}
-                    <br>{{event.location.postalcode}} {{event.location. town}}
-                    <br>{{event.location.streetname}}</p>
-                <p> {{event.description}}</p>
-            </div>
-        </div>
-</div>
-    </script>
-   <!--#############   Post Form   #############-->
-    <script type="text/ng-template" id="/addevent.html">
-        <h1>Maak een nieuw evenement</h1>
-        <form name="eventForm" ng-submit="addPost(eventForm.$valid)" novalidate="" class="form-horizontal">
-            <!-- FUIFNAME -->
-            <div class="form-group" ng-class="{ 'has-error' : eventForm.name.$invalid && !eventForm.name.$pristine }">
-                <label class="col-sm-2 control-label" for="name">Fuifnaam:</label>
-                <div class="col-sm-10">
-                    <input type="text" class="form-control" name="name" id="name" placeholder="Name" ng-model="name" required></input>
-                    <span class="help-block" ng-show="eventForm.name.$error.required">Verplicht</span>
-                    <p ng-show="eventForm.name.$invalid && !eventForm.name.$pristine" class="help-block">Je naam moet ingevuld zijn</p>
-                </div>
-            </div>
-            <div class="form-group">
-                <label class="col-sm-2 control-label" for="plaats">Plaatsnaam:</label>
-                <div class="col-sm-10">
-                    <input type="text" ng-model="placename" type="text" class="form-control" id="plaats" placeholder="Plaatsnaam"></input>
-                </div>
-            </div>
-            <div class="form-group">
-                <label class="col-sm-2 control-label" for="date">Datum:</label>
-                <div class="col-sm-10">
-                    <p class="input-group">
-                        <input type="text" class="form-control" id="date" placeholder="Date" uib-datepicker-popup="dd/MM/yy" ng-model="dt" is-open="status.opened" min-date="minDate" max-date="maxDate" datepicker-options="dateOptions" close-text="Close" />
-                        <span class="input-group-btn">
-              
-
-                <button type="button" class="btn btn-default" ng-click="open($event)"><i class="glyphicon glyphicon-calendar"></i></button>
-              </span>
-                    </p>
-                </div>
-            </div>
-            <div class="form-group">
-                <label class="col-sm-2 control-label" for="streetname">Straat + nummer:</label>
-                <div class="col-sm-10">
-                    <input type="text" ng-model="streetname" type="text" class="form-control" id="streetname" placeholder="Straat + nummer"></input>
-                </div>
-            </div>
-            <div class="form-group">
-                <label class="col-sm-2 control-label" for="postcode">postcode:</label>
-                <div class="col-sm-10">
-                    <input type="text" ng-model="postalcode" type="text" class="form-control" id="postcode" placeholder="Postcode"></input>
-                </div>
-            </div>
-            <div class="form-group">
-                <label class="col-sm-2 control-label" for="gemeente">Gemeente:</label>
-                <div class="col-sm-10">
-                    <input type="text" ng-model="town" type="text" class="form-control" id="gemeente" placeholder="Gemeente"></input>
-                </div>
-            </div>
-            <!-- REGIO -->
-            <div class="form-group" ng-class="{ 'has-error' : eventForm.selectedItem.$invalid && !eventForm.selectedItem.$pristine }">
-                <label class="col-sm-2 control-label" for="regio">Regio:</label>
-                <div class="col-sm-10">
-                    <select required class="form-control" id="regio" placeholder="Regio" ng-model="selectedItem" ng-options="item as item.name for item in items" name="regio">
-                        <option value="" disabled selected>Select your option</option>
-                    </select>
-                    <span class="help-block" ng-show="eventForm.regio.$error.required">Verplicht</span>
-                </div>
-            </div>
-            <div class="form-group">
-                <label class="col-sm-2 control-label" for="beschrijving">Beschrijving:</label>
-                <div class="col-sm-10">
-                    <input type="text" ng-model="description" type="text" id="beschrijving" class="form-control" placeholder="Beschrijving"></input>
-                </div>
-            </div>
-            <div class="form-group">
-                <div class="col-sm-offset-2 col-sm-10">
-                    <button type="submit" ng-disabled="eventForm.$invalid" class="btn btn-default">Post</button>
-                    <p>Vul eerst de verplichte velden(*) in!</p>
-                </div>
-            </div>
-        </form>
-    </script>
-     <!--#############   Specific event   #############-->
-    <script type="text/ng-template" id="/event.html">
-        <div class="container">
-            <div class="jumbotron">
-                <h1>{{event.name}}</h1>
-                <h3><b>{{event.placename}}</b></h3>
-                <p>{{event.location.region}}
-                    <br>{{event.location.postalcode}} {{event.location. town}}
-                    <br>{{event.location.streetname}}</p>
-                <div ng-init="rating "></div>
-                <div class="star-rating" star-rating rating-value="rating" data-max="10" on-rating-selected="rateFunction(rating)"></div>
-            </div>
-            <h2>Beschrijving</h2>
-            <p> {{event.description}}</p>
-            <h2>Met artiesten:</h2>
-            <div ng-repeat="artist in event.artists">
-                <p>{{artist.artistname}}</p>
-            </div>
-            <hr style="height: 2px; background: rgb(51, 51, 51) linear-gradient(to right, rgb(204, 204, 204), rgb(51, 51, 51), rgb(204, 204, 204)) repeat scroll 0% 0%;">
-            <div class="col-md-6 col-md-offset-3">
-                <h3>Ontbreken er nog artiesten?</h3>
-                <form name="artistForm" ng-submit="addArtist(artistForm.$valid)" novalidate="">
-                    <div class="form-group" ng-class="{ 'has-error' : artistForm.name.$invalid && !artistForm.name.$pristine }">
-                        <label class="control-label" for="artistname">ArtiestNaam:</label>
-                        <div>
-                            <input type="text" class="form-control" name="artistname" id="artistname" placeholder="Artiest naam" ng-model="artistname" required></input>
-                            <span class="help-block" ng-show="artistForm.name.$error.required">Verplicht</span>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <div class="">
-                            <p>
-                                <button type="submit" ng-disabled="artistForm.$invalid" class="btn btn-default">Voeg toe</button>
-                                Vul eerst de verplichte velden in!</p>
-                        </div>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </script>
-     <!--#############   Register Form   #############-->
-    <script type="text/ng-template" id="/register.html">
-        <div class="page-header">
-            <h1>Evenementen</h1>
-        </div>
-        <div ng-show="error" class="alert alert-danger row">
-            <span>{{ error.message }}</span>
-        </div>
-        <form ng-submit="register()" style="margin-top:30px;">
-            <h3>Registreer</h3>
-            <div class="form-group">
-                <input type="text" class="form-control" placeholder="Username" ng-model="user.username"></input>
-            </div>
-            <div class="form-group">
-                <input type="password" class="form-control" placeholder="Password" ng-model="user.password"></input>
-            </div>
-            <button type="submit" class="btn btn-primary">Registreer</button>
-        </form>
-    </script>
-     <!--#############   Login Form   #############-->
-    <script type="text/ng-template" id="/login.html">
-        <div class="page-header">
-            <h1>Evenementen</h1>
-        </div>
-        <div ng-show="error" class="alert alert-danger row">
-            <span>{{ error.message }}</span>
-        </div>
-        <form ng-submit="logIn()" style="margin-top:30px;">
-            <h3>Log In</h3>
-            <div class="form-group">
-                <input type="text" class="form-control" placeholder="Username" ng-model="user.username"></input>
-            </div>
-            <div class="form-group">
-                <input type="password" class="form-control" placeholder="Password" ng-model="user.password"></input>
-            </div>
-            <button type="submit" class="btn btn-primary">Log In</button>
-        </form>
-    </script>
+<body ng-app="events">
+    
+ 
+    
+  <div  ui-view="nav"/></div>
+           <div class="container"  ui-view="events"></div>
+        <!--<ui-view></ui-view>-->
+  
     <!-- build:js(.) scripts/vendor.js -->
     <!-- bower:js -->
     <script src="/bower_components/jquery/dist/jquery.js"></script>
@@ -239,9 +51,22 @@
     <script src="/bower_components/bootstrap/js/scrollspy.js"></script>
     <script src="/bower_components/bootstrap/js/collapse.js"></script>
     <script src="/bower_components/bootstrap/js/tab.js"></script>
+   <script src="/bower_components/angular-route/angular-route.js"></script>
     <!-- endbuild -->
     <!-- build:js scripts/main.js -->
+
+
     <script src="scripts/main.js"></script>
+    <script src="controllers/mainCtr.js"></script>
+   <script src="controllers/navCtr.js"></script>
+    <script src="controllers/authCtr.js"></script>
+    <script src="controllers/eventCtr.js"></script>
+    <script src="controllers/addEventCtr.js"></script>
+    <script src="directives/starDirective.js"></script>
+   <script src="factorys/authFact.js"></script>
+   <script src="factorys/eventsFact.js"></script>
+    <!-- endbuild -->
+
     <!-- endbuild -->
 </body>
 
